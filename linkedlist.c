@@ -28,7 +28,6 @@ void linkedlist_insert(linkedlist_t *ll, void *data) {
   }
 
   ll->size++;
-  printf("Inserted new value: %d\r\n", *(int*)ll->tail->data);
 }
 
 void linkedlist_delete(linkedlist_t *ll) {

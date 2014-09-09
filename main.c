@@ -15,6 +15,7 @@ int main (int argc, char *argv[]) {
     printf("North: %d\r\nSouth: %d\r\n", north, south);
 
     linkedlist_t *list = (linkedlist_t *)malloc(sizeof(linkedlist_t));
+    linkedlist_init(list);
     for (int i = 0; i < 10 ; ++i)
     {
       //init value
