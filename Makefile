@@ -10,7 +10,7 @@ build:
 	$(CC) $(CC_OPTS) $(SOURCES)
 
 clean:
-	rm $(EXE) $(EXE).exe;
+	rm -f $(EXE) $(EXE).exe;
 
 run: build
 	./$(EXE) $(EXE_ARGS)

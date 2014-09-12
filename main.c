@@ -3,6 +3,7 @@
 #include "linkedlist.h"
 #include "node.h"
 #include "graph.h"
+#include "semaphore.h"
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -54,5 +55,18 @@ int main (int argc, char *argv[]) {
     }
 
     graph_delete(&g);
+
+    semaphore_t sem;
+    semaphore_init(&sem, 1);
+    printf("Semaphore value: %lu\r\n", (volatile long)sem);
+
+    semaphore_wait(&sem);
+    printf("Semaphore value: %lu\r\n", (volatile long)sem);
+
+    semaphore_signal(&sem);
+    printf("Semaphore value: %lu\r\n", (volatile long)sem);
+
+    semaphore_wait(&sem);
+    printf("Semaphore value: %lu\r\n", (volatile long)sem);
   }
 }
