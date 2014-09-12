@@ -7,12 +7,14 @@
 	typedef HANDLE thread_type;
 	#define os_create_thread(t, fn, arg, id) (t = CreateThread(NULL, 0, fn, arg, 0, id))
 	#define os_delete_thread(t) (CloseHandle(t->handle))
+
+	extern void sleep(int seconds);
 #elif defined(__unix__)
 	#include <pthread.h>
 	typedef pthread_t thread_type;
-        typedef long thread_id;
+  typedef long thread_id;
 	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, (void *)id); 
-        #define os_delete_thread(t) (pthread_cancel(t->handle))
+  #define os_delete_thread(t) (pthread_cancel(t->handle))
 #endif
 
 typedef struct Thread thread_t;

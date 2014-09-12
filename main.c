@@ -1,11 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "vertex.h"
-#include "graph.h"
+#include <unistd.h>
 #include "semaphore.h"
 #include "thread.h"
 
-static void *hello_world(void *threadId);
+#if defined(_WIN32)
+  #define clear_screen() (system("cls"))
+#elif defined(__unix__)
+  #define clear_screen() (system("clear"))
+#endif
+
+static semaphore_t semaphore;
+static int north_threads, south_threads;
+static int north_total, south_total;
+
+static void *cross_north(void *threadId);
+static void *cross_south(void *threadId);
+static void cross_bridge();
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -16,38 +27,50 @@ int main (int argc, char *argv[]) {
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
-    printf("North Farmers: %d\r\nSouth Farmers: %d\r\n", north, south);
+    north_threads = south_threads = north_total = south_total = 0;
 
-    //create islands
-    vertex_t north_v, south_v;
-    vertex_init(&north_v, "North Island", NULL);
-    vertex_init(&south_v, "South Island", NULL);
+    semaphore_init(&semaphore);
+    while (1 < 2) {
+      if (north_threads < north) {
+        thread_t t = thread_create(cross_north, NULL);
+      }
 
-    //these are the bridges
-    vertex_add_adjacent(&north_v, &south_v);
-    vertex_add_adjacent(&south_v, &north_v);
+      if (south_threads < south) {
+        thread_t r = thread_create(cross_south, NULL);
+      }
 
-    //create graph
-    graph_t g;
-    graph_init(&g);
+      clear_screen();
+      printf("North: %d\r\nSouth: %d\r\n", north_total, south_total);
 
-    graph_add_vertex(&g, &north_v);
-    graph_add_vertex(&g, &south_v);
+      sleep(1);
+    } 
 
-    thread_t thread = thread_create(hello_world, NULL);
-    printf("Thread Id: %d\r\n", thread.id);
-
-    int count = 1000000;
-    while (count > 500000) count--;
-    thread_destroy(&thread);
-    while (count > 0) count--;
   }
 }
 
-static void *hello_world(void *threadId) {
-  int count = 100;
-  while (count > 0) {
-    printf("Hello, world! \r\n");
-    count--;
-  }
+typedef enum { NORTH, SOUTH } direction;
+
+static void *cross_north(void *threadId) {
+  north_threads++;
+  cross_bridge(NORTH);
+  north_threads--;
+}
+
+static void *cross_south(void *threadId) {
+  south_threads++;
+  cross_bridge(SOUTH);
+  south_threads--;
+}
+
+static void cross_bridge(direction d) {
+  semaphore_wait(&semaphore);
+
+  sleep(3);
+
+  if (d == NORTH)
+    north_total++;
+  else if (d == SOUTH) 
+    south_total++;
+
+  semaphore_signal(&semaphore);
 }
