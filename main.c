@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "linkedlist.h"
-#include "node.h"
+#include "vertex.h"
 #include "graph.h"
 #include "semaphore.h"
+#include "thread.h"
+
+static void hello_world(void *threadId);
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -32,39 +34,20 @@ int main (int argc, char *argv[]) {
     graph_add_vertex(&g, &north_v);
     graph_add_vertex(&g, &south_v);
 
-    //print adjacencies
-    linkedlist_t vertices = g.vertices;
-    node_t inode = *vertices.head;
-    for (int i = 0; i < vertices.size; ++i)
-    {
-      vertex_t v = *(vertex_t *)inode.data;
-      printf("%s:\r\n", v.name);
+    thread_t thread = thread_create(hello_world, NULL);
+    printf("Thread Id: %d\r\n", thread.id);
 
-      node_t jnode = *v.adjacent_vertices.head;
-      for (int j = 0; j < v.adjacent_vertices.size; ++j)
-      {
-        vertex_t w = *(vertex_t *)jnode.data;
-        printf("Is connected to %s\r\n", w.name);
+    int count = 1000000;
+    while (count > 500000) count--;
+    thread_destroy(&thread);
+    while (count > 0) count--;
+  }
+}
 
-        if (jnode.nextptr)
-          jnode = *jnode.nextptr;
-      }
-
-      if (inode.nextptr)
-        inode = *inode.nextptr;
-    }
-
-    semaphore_t sem;
-    semaphore_init(&sem, 1);
-    printf("Semaphore value: %lu\r\n", (volatile long)sem);
-
-    semaphore_wait(&sem);
-    printf("Semaphore value: %lu\r\n", (volatile long)sem);
-
-    semaphore_signal(&sem);
-    printf("Semaphore value: %lu\r\n", (volatile long)sem);
-
-    semaphore_wait(&sem);
-    printf("Semaphore value: %lu\r\n", (volatile long)sem);
+static void hello_world(void *threadId) {
+  int count = 100;
+  while (count > 0) {
+    printf("Hello, world! \r\n");
+    count--;
   }
 }
