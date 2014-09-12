@@ -10,8 +10,9 @@
 #elif defined(__unix__)
 	#include <pthread.h>
 	typedef pthread_t thread_type;
-	#define os_create_thread(t, fn, arg, id) \
-		pthread_create(&t, NULL, &fn, (void *)id); 
+        typedef long thread_id;
+	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, (void *)id); 
+        #define os_delete_thread(t) (pthread_cancel(t->handle))
 #endif
 
 typedef struct Thread thread_t;

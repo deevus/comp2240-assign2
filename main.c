@@ -5,7 +5,7 @@
 #include "semaphore.h"
 #include "thread.h"
 
-static void hello_world(void *threadId);
+static void *hello_world(void *threadId);
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -44,7 +44,7 @@ int main (int argc, char *argv[]) {
   }
 }
 
-static void hello_world(void *threadId) {
+static void *hello_world(void *threadId) {
   int count = 100;
   while (count > 0) {
     printf("Hello, world! \r\n");
