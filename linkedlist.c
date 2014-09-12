@@ -29,14 +29,3 @@ void linkedlist_insert(linkedlist_t *ll, void *data) {
 
   ll->size++;
 }
-
-void linkedlist_delete(linkedlist_t *ll) {
-  node_t *next, *curr = ll->head;
-  while (curr) {
-    next = curr->nextptr;
-
-    node_delete(curr);
-
-    curr = next;
-  }
-}

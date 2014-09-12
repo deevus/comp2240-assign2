@@ -11,8 +11,6 @@ struct Graph {
 
 void graph_init(graph_t *g);
 
-void graph_delete(graph_t *g);
-
 void graph_add_vertex(graph_t *g, vertex_t *v);
 
 #endif

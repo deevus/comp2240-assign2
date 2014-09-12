@@ -14,6 +14,4 @@ void linkedlist_init(linkedlist_t *ll);
 
 void linkedlist_insert(linkedlist_t *ll, void *data);
 
-void linkedlist_delete(linkedlist_t *ll);
-
 #endif /* LINKEDLIST_H */

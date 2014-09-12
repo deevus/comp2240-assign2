@@ -54,8 +54,6 @@ int main (int argc, char *argv[]) {
         inode = *inode.nextptr;
     }
 
-    graph_delete(&g);
-
     semaphore_t sem;
     semaphore_init(&sem, 1);
     printf("Semaphore value: %lu\r\n", (volatile long)sem);
