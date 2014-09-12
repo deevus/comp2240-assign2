@@ -1,7 +1,7 @@
 CC=gcc
 EXE=Assignment2
 EXE_ARGS=1 2
-CC_OPTS=-o $(EXE) -std=c11 -g
+CC_OPTS=-o $(EXE) -std=gnu99 -g
 SOURCES=*.c
 
 all: build
