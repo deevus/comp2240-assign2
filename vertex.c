@@ -10,8 +10,9 @@ void vertex_init (vertex_t *v, char* name, void *data) {
 }
 
 void vertex_delete (vertex_t *v) {
+	free(v->name);
+	free(v->data);
 	linkedlist_delete( &v->adjacent_vertices );
-	free(v);
 }
 
 void vertex_add_adjacent (vertex_t *v, vertex_t *w) {

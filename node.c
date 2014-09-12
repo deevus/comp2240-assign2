@@ -8,5 +8,4 @@ void node_init(node_t *node, void *data) {
 
 void node_delete(node_t *node) {
 	free(node->data);
-  free(node);
 }

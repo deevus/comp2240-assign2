@@ -6,7 +6,7 @@ void graph_init(graph_t *g) {
 }
 
 void graph_delete(graph_t *g) {
-	free (g);
+	linkedlist_delete(&g->vertices);
 }
 
 void graph_add_vertex(graph_t *g, vertex_t *v) {

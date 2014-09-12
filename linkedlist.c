@@ -39,5 +39,4 @@ void linkedlist_delete(linkedlist_t *ll) {
 
     curr = next;
   }
-  free(ll);
 }
