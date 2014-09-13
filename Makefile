@@ -1,23 +1,62 @@
-CC=gcc
-EXE_ARGS=6 6
-CC_FLAGS= -std=gnu99 -g
-ALL_SOURCES=$(wildcard src/*.c)
-LIB_SRC=$(filter-out src/main%.c, $(ALL_SOURCES))
-Q1_MAIN=src/main.c
-Q1_EXE=q1
-Q1_BUILD=$(CC) $(CC_FLAGS) -o $(Q1_EXE) $(LIB_SRC) $(Q1_MAIN)
+BUILD_DIR := bin
+SOURCE_DIR := src
+CFLAGS += -std=gnu99 -g
+ALL_SOURCES := $(wildcard ${SOURCE_DIR}/*.c)
+LIB_SRC := $(filter-out src/main%.c, $(ALL_SOURCES))
+
+Q1_NAME := q1
+Q1_ARGS := 6 6
+Q1_ENTRY := $(SOURCE_DIR)/main.c
+Q1_SRC := $(LIB_SRC) $(Q1_ENTRY)
+Q1_OBJ := ${Q1_SRC:%.c=%.o}
+
+Q2_NAME := q2
+Q2_ARGS := $(Q1_ARGS)
+Q2_ENTRY := $(SOURCE_DIR)/main2.c
+Q2_SRC := $(LIB_SRC) $(Q2_ENTRY)
+Q2_OBJ := ${Q2_SRC:%.c=%.o}
+
+Q3_NAME := q3
+Q3_ARGS := $(Q1_ARGS)
+Q3_ENTRY := $(SOURCE_DIR)/main3.c
+Q3_SRC := $(LIB_SRC) $(Q3_ENTRY)
+Q3_OBJ := ${Q3_SRC:%.c=%.o}
+
+Q4_NAME := q4
+Q4_ARGS := $(Q1_ARGS)
+Q4_ENTRY := $(SOURCE_DIR)/main4.c
+Q4_SRC := $(LIB_SRC) $(Q4_ENTRY)
+Q4_OBJ := ${Q4_SRC:%.c=%.o}
+
+ALL_EXE := $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
+ALL_EXE += $(ALL_EXE) ${ALL_EXE:%=%.exe}
+ALL_OBJ := ${ALL_SOURCES:%.c=%.o}
 
 ifneq ($(OS),Windows_NT)
-	CC_FLAGS += -pthread
+	CFLAGS += -pthread
 endif
 
-all: build
+.PHONY: all clean distclean
 
-build:
-	$(Q1_BUILD)
+all: $(Q1_NAME) 
+
+$(Q1_NAME): $(Q1_OBJ)
+	$(LINK.c) $(Q1_OBJ) -o $(Q1_NAME)
+
+$(Q2_NAME): $(Q2_OBJ)
+	$(LINK.c) $(Q2_OBJ) -o $(Q2_NAME)
+
+$(Q3_NAME): $(Q3_OBJ)
+	$(LINK.c) $(Q3_OBJ) -o $(Q3_NAME)
+
+$(Q4_NAME): $(Q4_OBJ)
+	$(LINK.c) $(Q4_OBJ) -o $(Q4_NAME)
 
 clean:
-	rm -f $(Q1_EXE) $(Q1_EXE).exe;
+	@- $(RM) -f $(ALL_EXE)
+	@- $(RM) $(ALL_OBJ)
 
-run: build
-	./$(EXE) $(EXE_ARGS)
+distclean: clean
+
+run: all
+	./$(Q1_NAME) $(Q1_ARGS)
