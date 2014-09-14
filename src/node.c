@@ -4,4 +4,5 @@
 void node_init(node_t *node, void *data) {
   node->data = data;
   node->nextptr = NULL;
+  node->prevptr = NULL;
 }

@@ -1,5 +1,6 @@
 BUILD_DIR := bin
 SOURCE_DIR := src
+TEST_DIR := tests
 CFLAGS += -std=gnu99 -g
 ALL_SOURCES := $(wildcard ${SOURCE_DIR}/*.c)
 LIB_SRC := $(filter-out src/main%.c, $(ALL_SOURCES))
@@ -32,13 +33,18 @@ ALL_EXE := $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
 ALL_EXE += $(ALL_EXE) ${ALL_EXE:%=%.exe}
 ALL_OBJ := ${ALL_SOURCES:%.c=%.o}
 
+TEST_SRC := $(wildcard ${TEST_DIR}/*.c)
+TEST_OBJ := ${TEST_SRC:%.c=%.o} 
+TEST_INC := $(SOURCE_DIR)
+TEST_EXE := ${TEST_SRC:%.c=%} ${TEST_SRC:%.c=%.exe}
+
 ifneq ($(OS),Windows_NT)
 	CFLAGS += -pthread
 endif
 
 .PHONY: all clean distclean
 
-all: $(Q1_NAME) 
+all: $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
 
 $(Q1_NAME): $(Q1_OBJ)
 	$(LINK.c) $(Q1_OBJ) -o $(Q1_NAME)
@@ -53,10 +59,14 @@ $(Q4_NAME): $(Q4_OBJ)
 	$(LINK.c) $(Q4_OBJ) -o $(Q4_NAME)
 
 clean:
-	@- $(RM) -f $(ALL_EXE)
-	@- $(RM) $(ALL_OBJ)
+	@- $(RM) -f $(ALL_EXE) $(TEST_EXE)
+	@- $(RM) $(ALL_OBJ) $(TEST_OBJ)
 
 distclean: clean
 
 run: all
 	./$(Q1_NAME) $(Q1_ARGS)
+
+test: CFLAGS += $(foreach includedir,$(TEST_INC),-I$(includedir))
+test: $(ALL_OBJ) 
+	@- $(foreach test, $(TEST_SRC), $(LINK.c) $(test) $(LIB_SRC) -o $(patsubst %.c, %, $(test)); echo Running $(patsubst %.c, %, $(test)); $(patsubst %.c, %, $(test)); echo;)

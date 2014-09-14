@@ -5,6 +5,7 @@ typedef struct Node node_t;
 struct Node {
   void *data;
   node_t *nextptr;
+  node_t *prevptr;
 };
 
 void node_init(node_t *node, void *data);

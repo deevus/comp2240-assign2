@@ -1,8 +1,6 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
-#include "linkedlist.h"
-
 typedef struct semaphore semaphore_t;
 struct semaphore {
 	volatile int lock;
