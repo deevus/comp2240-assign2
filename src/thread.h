@@ -14,7 +14,7 @@
 	typedef pthread_t thread_type;
   typedef long thread_id;
 	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, arg); 
-  #define os_delete_thread(t) (pthread_cancel(t->handle))
+  #define os_delete_thread(t) (pthread_exit(NULL))
 #endif
 
 typedef struct Thread thread_t;

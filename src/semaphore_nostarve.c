@@ -43,7 +43,6 @@ static void sem_queue(semaphore_t *sem, signed int id) {
 	}
 	//otherwise queue it
 	else {
-		printf("Queued %d\r\n", id);
 		queue_enqueue(&sem->blocked, &id);
 	}
 

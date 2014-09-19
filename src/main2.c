@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "farmer.h"
 #include "thread.h"
 #include "semaphore_nostarve.h"
 #include "node.h"
@@ -14,12 +15,9 @@
 #endif
 
 static semaphore_t semaphore;
-static int north_threads, south_threads;
-static int north_total, south_total;
+static int total_crossed = 0;
 
-static void cross_north(void *threadId);
-static void cross_south(void *threadId);
-static void cross_bridge();
+static void cross_bridge(farmer_t *farmer);
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -32,58 +30,63 @@ int main (int argc, char *argv[]) {
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
-    north_threads = south_threads = north_total = south_total = 0;
-
-    int next_thread_id = 1;
     sem_ns_init(&semaphore);
-    while (1 < 2) {
-      if (north_threads < north) {
-      	int *n_id = malloc(sizeof(int));
-        *n_id = next_thread_id++;
-        thread_create(cross_north, n_id);
+    int num_threads = north + south;
+    int north_id, south_id;
+    north_id = south_id = 0;
+    thread_t threads[num_threads];
+    for (int i = 0; i < num_threads; ++i)
+    {
+      farmer_t *farmer = malloc(sizeof(farmer_t));
+      if (north > 0) {
+        farmer->id = ++north_id;
+        farmer->direction = NORTH;
+        north--;
+      }
+      else {
+        farmer->id = ++south_id;
+        farmer->direction = SOUTH;
+        south--;
       }
 
-      if (south_threads < south) {
-      	int *s_id = malloc(sizeof(int));
-        *s_id = next_thread_id++;
-        thread_create(cross_south, s_id);
-      }
+      threads[i] = thread_create(cross_bridge, farmer);
+    }
 
-      //clear_screen();
-      //printf("North: %d\r\nSouth: %d\r\n", north_total, south_total);
-
-      sleep(1);
-    } 
-
-    sem_ns_destroy(&semaphore);
+    while (1 < 2);
   }
+
+  sem_ns_destroy(&semaphore);
+  thread_destroy(NULL);
 }
 
-typedef enum { NORTH, SOUTH } direction;
+static void cross_bridge(farmer_t *farmer) {
+  //loop forever
+  while (1 < 2) {
 
-static void cross_north(void *threadId) {
-  north_threads++;
-  cross_bridge(NORTH, threadId);
-  north_threads--;
-}
+    sem_ns_wait(&semaphore, &farmer->id);
 
-static void cross_south(void *threadId) {
-  south_threads++;
-  cross_bridge(SOUTH, threadId);
-  south_threads--;
-}
+    printf("%s farmer %d now crossing\r\n", 
+      (farmer->direction == NORTH ? "North" : "South"), 
+      farmer->id);
 
-static void cross_bridge(direction d, int id) {
-  sem_ns_wait(&semaphore, id);
+    sleep(1);
+    printf("10 steps\r\n");
 
-  printf("%d now crossing\r\n", id);
-  sleep(3);
+    sleep(1);
+    printf("20 steps\r\n");
 
-  if (d == NORTH)
-    north_total++;
-  else if (d == SOUTH) 
-    south_total++;
+    sleep(1);
+    printf("30 steps\r\n");
 
-  printf("%d has crossed\r\n", id);
-  sem_ns_signal(&semaphore);
+    total_crossed++;
+
+    printf("%s farmer %d has crossed\r\n", 
+      (farmer->direction == NORTH ? "North" : "South"), 
+      farmer->id);
+
+    sem_ns_signal(&semaphore);
+
+    printf("Total Crossed: %d\r\n", total_crossed);
+
+  }
 }
