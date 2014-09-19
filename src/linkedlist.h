@@ -12,13 +12,13 @@ struct ll_struct {
 
 extern void linkedlist_init(linkedlist_t *ll);
 
-extern void linkedlist_insert(linkedlist_t *ll, void *data);
+extern void linkedlist_insert(linkedlist_t *ll, const void *data);
 
-extern void linkedlist_remove(linkedlist_t *ll, void *data);
+extern void linkedlist_remove(linkedlist_t *ll, const void *data);
 
-extern void *linkedlist_gethead(const linkedlist_t *ll);
+extern const void *linkedlist_gethead(const linkedlist_t *ll);
 
-extern void *linkedlist_gettail(const linkedlist_t *ll);
+extern const void *linkedlist_gettail(const linkedlist_t *ll);
 
 extern bool linkedlist_isempty(const linkedlist_t *ll);
 

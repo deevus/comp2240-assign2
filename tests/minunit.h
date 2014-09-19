@@ -7,15 +7,8 @@
 #define mu_run_test(test) do { char *message = test(); tests_run++; \
                               if (message) return message; } while (0)
 #define mu_assert_equals_int(message, expected, actual) \
-                          do { \
-                            if (!(expected == actual)) { \
-                            	sprintf(message, \
-                            		"%s (Expected: %d, Actual: %d)", \
-                            		message, expected, actual); \
-                            	return message; \
-                            } \
-                          } while (0)
+                              mu_assert(message, expected == actual)
 
 extern int tests_run;
 
- #endif
+#endif

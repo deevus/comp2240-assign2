@@ -6,7 +6,7 @@
 
 #if defined(_WIN32)
   #define clear_screen() (system("cls"))
-#elif defined(__unix__)
+#else
   #define clear_screen() (system("clear"))
 #endif
 
@@ -14,8 +14,8 @@ static semaphore_t semaphore;
 static int north_threads, south_threads;
 static int north_total, south_total;
 
-static void *cross_north(void *threadId);
-static void *cross_south(void *threadId);
+static void cross_north(void *threadId);
+static void cross_south(void *threadId);
 static void cross_bridge();
 
 int main (int argc, char *argv[]) {
@@ -32,11 +32,11 @@ int main (int argc, char *argv[]) {
     semaphore_init(&semaphore);
     while (1 < 2) {
       if (north_threads < north) {
-        thread_t t = thread_create(cross_north, NULL);
+        thread_create(cross_north, NULL);
       }
 
       if (south_threads < south) {
-        thread_t r = thread_create(cross_south, NULL);
+        thread_create(cross_south, NULL);
       }
 
       clear_screen();
@@ -50,13 +50,13 @@ int main (int argc, char *argv[]) {
 
 typedef enum { NORTH, SOUTH } direction;
 
-static void *cross_north(void *threadId) {
+static void cross_north(void *threadId) {
   north_threads++;
   cross_bridge(NORTH);
   north_threads--;
 }
 
-static void *cross_south(void *threadId) {
+static void cross_south(void *threadId) {
   south_threads++;
   cross_bridge(SOUTH);
   south_threads--;

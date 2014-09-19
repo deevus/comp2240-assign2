@@ -9,11 +9,11 @@
 	#define os_delete_thread(t) (CloseHandle(t->handle))
 
 	extern void sleep(int seconds);
-#elif defined(__unix__)
+#else 
 	#include <pthread.h>
 	typedef pthread_t thread_type;
   typedef long thread_id;
-	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, (void *)id); 
+	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, arg); 
   #define os_delete_thread(t) (pthread_cancel(t->handle))
 #endif
 
@@ -26,5 +26,7 @@ struct Thread {
 extern thread_t thread_create(void *start_routine, void *args);
 
 extern void thread_destroy(thread_t *t);
+
+extern thread_id thread_getid();
 
 #endif

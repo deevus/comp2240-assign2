@@ -52,10 +52,12 @@ static char *test_queue_two() {
 
 	int front = *(int *)queue_front(&queue);
 	mu_assert_equals_int("Error: Incorrect value", x, front);
+	mu_assert_equals_int("Error: Incorrect size", 2, queue_getsize(&queue));
 
 	queue_dequeue(&queue);
 	front = *(int *)queue_front(&queue);
 	mu_assert_equals_int("Error: Incorrect value", y, front);
+	mu_assert_equals_int("Error: Incorrect size", 1, queue_getsize(&queue));
 
 	mu_assert("Error: queue reporting empty", !queue_isempty(&queue));
 	queue_destroy(&queue);
@@ -65,6 +67,7 @@ static char *test_queue_two() {
 static char *all_tests() {
 	mu_run_test(test_queue_empty);
 	mu_run_test(test_queue_one);
+	mu_run_test(test_queue_two);
 	mu_run_test(test_queue_dequeue);
 	return 0;
 } 

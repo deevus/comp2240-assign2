@@ -13,6 +13,7 @@ static char *test_linkedlist_insert_one() {
 	linkedlist_insert(&list, &x);
 
 	mu_assert_equals_int("Error: insert error.", x, *(int *)linkedlist_gethead(&list));
+	mu_assert_equals_int("Error: incorrect size.", 1, linkedlist_getsize(&list));
 
 	linkedlist_destroy(&list);
 	return 0;
@@ -39,6 +40,8 @@ static char *test_linkedlist_insert_two() {
 	mu_assert_equals_int("Error: Invalid tail value", 
 		y, 
 		*(int *)linkedlist_gettail(&list));
+
+	mu_assert_equals_int("Error: incorrect size.", 2, linkedlist_getsize(&list));
 
 	linkedlist_destroy(&list);
 	return 0;

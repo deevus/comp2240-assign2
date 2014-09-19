@@ -11,14 +11,16 @@ struct queue {
 
 extern void queue_init(queue_t *queue);
 
-extern void queue_enqueue(queue_t *queue, void *data);
+extern void queue_enqueue(queue_t *queue, const void *data);
 
 extern void queue_dequeue(queue_t *queue);
 
-extern void *queue_front(const queue_t *queue);
+extern const void *queue_front(const queue_t *queue);
 
-extern bool queue_isempty(const queue_t *queue);
+extern const bool queue_isempty(const queue_t *queue);
 
 extern void queue_destroy(queue_t *queue);
+
+extern const int queue_getsize(const queue_t *queue);
 
 #endif

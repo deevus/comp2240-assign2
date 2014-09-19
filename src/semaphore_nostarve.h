@@ -17,4 +17,6 @@ extern int sem_ns_wait(semaphore_t *sem, signed int id);
 
 extern int sem_ns_signal(semaphore_t *sem);
 
+extern void sem_ns_destroy(semaphore_t *sem);
+
 #endif

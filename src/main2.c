@@ -17,8 +17,8 @@ static semaphore_t semaphore;
 static int north_threads, south_threads;
 static int north_total, south_total;
 
-static void *cross_north(void *threadId);
-static void *cross_south(void *threadId);
+static void cross_north(void *threadId);
+static void cross_south(void *threadId);
 static void cross_bridge();
 
 int main (int argc, char *argv[]) {
@@ -27,6 +27,8 @@ int main (int argc, char *argv[]) {
   }
   else {
     /* normal execution */
+    printf("main: Start\r\n");
+
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
@@ -36,13 +38,15 @@ int main (int argc, char *argv[]) {
     sem_ns_init(&semaphore);
     while (1 < 2) {
       if (north_threads < north) {
-      	int n_id = next_thread_id++;
-        thread_t t = thread_create(cross_north, &n_id);
+      	int *n_id = malloc(sizeof(int));
+        *n_id = next_thread_id++;
+        thread_create(cross_north, n_id);
       }
 
       if (south_threads < south) {
-      	int s_id = next_thread_id++;
-        thread_t r = thread_create(cross_south, &s_id);
+      	int *s_id = malloc(sizeof(int));
+        *s_id = next_thread_id++;
+        thread_create(cross_south, s_id);
       }
 
       //clear_screen();
@@ -51,20 +55,21 @@ int main (int argc, char *argv[]) {
       sleep(1);
     } 
 
+    sem_ns_destroy(&semaphore);
   }
 }
 
 typedef enum { NORTH, SOUTH } direction;
 
-static void *cross_north(void *threadId) {
+static void cross_north(void *threadId) {
   north_threads++;
-  cross_bridge(NORTH, *(int *)threadId);
+  cross_bridge(NORTH, threadId);
   north_threads--;
 }
 
-static void *cross_south(void *threadId) {
+static void cross_south(void *threadId) {
   south_threads++;
-  cross_bridge(SOUTH, *(int *)threadId);
+  cross_bridge(SOUTH, threadId);
   south_threads--;
 }
 

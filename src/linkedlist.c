@@ -10,7 +10,7 @@ void linkedlist_init(linkedlist_t *ll) {
   ll->size = 0;
 }
 
-void linkedlist_insert(linkedlist_t *ll, void *data) {
+void linkedlist_insert(linkedlist_t *ll, const void *data) {
   node_t *temp = malloc(sizeof(node_t));
   node_init(temp, data);
 
@@ -23,21 +23,21 @@ void linkedlist_insert(linkedlist_t *ll, void *data) {
   ll->size++;
 }
 
-void *linkedlist_gethead(const linkedlist_t *ll) {
-  void *data = NULL;
+const void *linkedlist_gethead(const linkedlist_t *ll) {
+  const void *data = NULL;
   node_t *head = ll->sentinel.nextptr;
   if (head != NULL) data = head->data;
   return data;
-}
+} 
 
-void *linkedlist_gettail(const linkedlist_t *ll) {
-  void *data = NULL;
+const void *linkedlist_gettail(const linkedlist_t *ll) {
+  const void *data = NULL;
   node_t *tail = ll->sentinel.prevptr;
   if (tail != NULL) data = tail->data;
   return data;
 }
 
-static node_t *find_node(const linkedlist_t *ll, void *data) {
+static node_t *find_node(const linkedlist_t *ll, const void *data) {
   node_t *curr = ll->sentinel.nextptr;
   while (curr) {
     if (data == curr->data) {
@@ -50,7 +50,7 @@ static node_t *find_node(const linkedlist_t *ll, void *data) {
   return NULL;
 }
 
-void linkedlist_remove(linkedlist_t *ll, void *data) {
+void linkedlist_remove(linkedlist_t *ll, const void *data) {
   //find node
   node_t *node = find_node(ll, data);
   if (!node) {
@@ -95,6 +95,13 @@ void linkedlist_destroy(linkedlist_t *ll) {
     next = curr->nextptr;
 
     //free this one
-    free(curr);
+    if (curr)
+      free(curr);
+
+    //get next
+    curr = next;
   }
 }
+
+
+

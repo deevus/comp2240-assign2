@@ -1,7 +1,7 @@
 BUILD_DIR := bin
 SOURCE_DIR := src
 TEST_DIR := tests
-CFLAGS += -std=gnu99 -g
+CFLAGS += -std=gnu99 -g -DDEBUG -Wall
 ALL_SOURCES := $(wildcard ${SOURCE_DIR}/*.c)
 LIB_SRC := $(filter-out src/main%.c, $(ALL_SOURCES))
 
@@ -30,19 +30,19 @@ Q4_SRC := $(LIB_SRC) $(Q4_ENTRY)
 Q4_OBJ := ${Q4_SRC:%.c=%.o}
 
 ALL_EXE := $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
-ALL_EXE += $(ALL_EXE) ${ALL_EXE:%=%.exe}
+ALL_EXE += $(ALL_EXE) ${ALL_EXE:%=%.exe} ${ALL_EXE:%=%.dSYM}
 ALL_OBJ := ${ALL_SOURCES:%.c=%.o}
 
 TEST_SRC := $(wildcard ${TEST_DIR}/*.c)
 TEST_OBJ := ${TEST_SRC:%.c=%.o} 
 TEST_INC := $(SOURCE_DIR)
-TEST_EXE := ${TEST_SRC:%.c=%} ${TEST_SRC:%.c=%.exe}
+TEST_EXE := ${TEST_SRC:%.c=%} ${TEST_SRC:%.c=%.exe} ${TEST_SRC:%.c=%.dSYM}
 
 ifneq ($(OS),Windows_NT)
 	CFLAGS += -pthread
 endif
 
-.PHONY: all clean distclean
+.PHONY: all clean distclean test
 
 all: $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
 
@@ -59,7 +59,7 @@ $(Q4_NAME): $(Q4_OBJ)
 	$(LINK.c) $(Q4_OBJ) -o $(Q4_NAME)
 
 clean:
-	@- $(RM) -f $(ALL_EXE) $(TEST_EXE)
+	@- $(RM) -rf $(ALL_EXE) $(TEST_EXE)
 	@- $(RM) $(ALL_OBJ) $(TEST_OBJ)
 
 distclean: clean
