@@ -61,19 +61,19 @@ static void cross_bridge(farmer_t *farmer) {
   //loop forever
   while (1) {
 
-    sem_ns_wait(&semaphore, farmer->id);
+    sem_ns_wait(&semaphore);
 
     printf("%s farmer %d now crossing\r\n", 
       (farmer->direction == NORTH ? "North" : "South"), 
       farmer->id);
 
-    sleep(1000);
+    msleep(1000);
     printf("10 steps\r\n");
 
-    sleep(1000);
+    msleep(1000);
     printf("20 steps\r\n");
 
-    sleep(1000);
+    msleep(1000);
     printf("30 steps\r\n");
 
     total_crossed++;

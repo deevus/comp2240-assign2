@@ -33,7 +33,7 @@ int main (int argc, char *argv[]) {
     north_id = south_id = 0;
     thread_t threads[num_threads];
 
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < num_threads; ++i) {
 
       farmer_t *farmer = malloc(sizeof(farmer_t));
       if (north > 0) {
@@ -59,28 +59,30 @@ int main (int argc, char *argv[]) {
 }
 
 static void cross_bridge(farmer_t *farmer) {
-  semaphore_wait(&semaphore);
+  while (1) {
+    semaphore_wait(&semaphore);
 
-  printf("%s farmer %d now crossing\r\n", 
-    (farmer->direction == NORTH ? "North" : "South"), 
-    farmer->id);
+    printf("%s farmer %d now crossing\r\n", 
+      (farmer->direction == NORTH ? "North" : "South"), 
+      farmer->id);
 
-  sleep(1000);
-  printf("10 steps\r\n");
+    msleep(1000);
+    printf("10 steps\r\n");
 
-  sleep(1000);
-  printf("20 steps\r\n");
+    msleep(1000);
+    printf("20 steps\r\n");
 
-  sleep(1000);
-  printf("30 steps\r\n");
+    msleep(1000);
+    printf("30 steps\r\n");
 
-  total_crossed++;
+    total_crossed++;
 
-  printf("%s farmer %d has crossed\r\n", 
-    (farmer->direction == NORTH ? "North" : "South"), 
-    farmer->id);
+    printf("%s farmer %d has crossed\r\n", 
+      (farmer->direction == NORTH ? "North" : "South"), 
+      farmer->id);
 
-  semaphore_signal(&semaphore);
+    semaphore_signal(&semaphore);
 
-  printf("Total Crossed: %d\r\n", total_crossed);
+    printf("Total Crossed: %d\r\n", total_crossed);
+  }
 }

@@ -1,8 +1,11 @@
 #include "semaphore_nostarve.h"
 #include "atomic.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-static void sem_queue(semaphore_t *sem, signed int id);
+static volatile int wait_id = 0;
+
+static void sem_queue(semaphore_t *sem, signed int *id);
 static void sem_dequeue(semaphore_t *sem);
 
 void sem_ns_init(semaphore_t *sem) {
@@ -15,12 +18,16 @@ void sem_ns_destroy(semaphore_t *sem) {
 	queue_destroy(&sem->blocked);
 }
 
-int sem_ns_wait(semaphore_t *sem, signed int id) {
+int sem_ns_wait(semaphore_t *sem) {
+	//get id
+	int *id = malloc(sizeof(int));
+	*id = wait_id++;
+
 	//queue thread
 	sem_queue(sem, id);
 
 	//wait until turn
-	while (atomic_compare_swap(&sem->next_id, id, id) != id);
+	while (atomic_compare_swap(&sem->next_id, *id, *id) != *id);
 	//get lock
 	while (atomic_compare_swap(&sem->critlock, 0, 1) == 1);
 	return 0;
@@ -32,18 +39,18 @@ int sem_ns_signal(semaphore_t *sem) {
 	return 0;
 }
 
-static void sem_queue(semaphore_t *sem, signed int id) {
+static void sem_queue(semaphore_t *sem, signed int *id) {
 	//get lock
 	while (atomic_compare_swap(&sem->queuelock, 0, 1) == 1);
 
 	//crit section
 	//set this as next if queue is empty
 	if (queue_isempty(&sem->blocked) && atomic_compare_swap(&sem->critlock, 0 ,0) == 0) {
-		sem->next_id = id;
+		sem->next_id = *id;
 	}
 	//otherwise queue it
 	else {
-		queue_enqueue(&sem->blocked, &id);
+		queue_enqueue(&sem->blocked, id);
 	}
 
 	//release lock
@@ -56,11 +63,14 @@ static void sem_dequeue(semaphore_t *sem) {
 
 	//crit section
 	if (!queue_isempty(&sem->blocked)) {
+		int *id = (int *)queue_front(&sem->blocked);
+
 		//set next id
-		sem->next_id = *(int *)queue_front(&sem->blocked);
+		sem->next_id = *id;
 
 		//dequeue it
 		queue_dequeue(&sem->blocked);
+		free(id);
 	}
 	else {
 		sem->next_id = 0;

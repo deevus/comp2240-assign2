@@ -1,5 +1,5 @@
 #ifndef TIME_H
 #define TIME_H
 
-extern int sleep(int millis);
+extern int msleep(int millis);
 #endif
