@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include "semaphore.h"
 #include "thread.h"
+#include "farmer.h"
+#include "time.h"
 
 #if defined(_WIN32)
   #define clear_screen() (system("cls"))
@@ -11,12 +13,9 @@
 #endif
 
 static semaphore_t semaphore;
-static int north_threads, south_threads;
-static int north_total, south_total;
+static int total_crossed = 0;
 
-static void cross_north(void *threadId);
-static void cross_south(void *threadId);
-static void cross_bridge();
+static void cross_bridge(farmer_t *farmer);
 
 int main (int argc, char *argv[]) {
   if (argc != 3) {
@@ -27,50 +26,61 @@ int main (int argc, char *argv[]) {
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
-    north_threads = south_threads = north_total = south_total = 0;
-
+    //init
     semaphore_init(&semaphore);
-    while (1 < 2) {
-      if (north_threads < north) {
-        thread_create(cross_north, NULL);
+    int num_threads = north + south;
+    int north_id, south_id;
+    north_id = south_id = 0;
+    thread_t threads[num_threads];
+
+    for (int i = 0; i < 1; ++i) {
+
+      farmer_t *farmer = malloc(sizeof(farmer_t));
+      if (north > 0) {
+        farmer->id = ++north_id;
+        farmer->direction = NORTH;
+        north--;
+      }
+      else {
+        farmer->id = ++south_id;
+        farmer->direction = SOUTH;
+        south--;
       }
 
-      if (south_threads < south) {
-        thread_create(cross_south, NULL);
-      }
+      threads[i] = thread_create(cross_bridge, farmer);
 
-      clear_screen();
-      printf("North: %d\r\nSouth: %d\r\n", north_total, south_total);
-
-      sleep(1);
     } 
 
+    while(1);
+
   }
+
+  thread_destroy(NULL);
 }
 
-typedef enum { NORTH, SOUTH } direction;
-
-static void cross_north(void *threadId) {
-  north_threads++;
-  cross_bridge(NORTH);
-  north_threads--;
-}
-
-static void cross_south(void *threadId) {
-  south_threads++;
-  cross_bridge(SOUTH);
-  south_threads--;
-}
-
-static void cross_bridge(direction d) {
+static void cross_bridge(farmer_t *farmer) {
   semaphore_wait(&semaphore);
 
-  sleep(3);
+  printf("%s farmer %d now crossing\r\n", 
+    (farmer->direction == NORTH ? "North" : "South"), 
+    farmer->id);
 
-  if (d == NORTH)
-    north_total++;
-  else if (d == SOUTH) 
-    south_total++;
+  sleep(1000);
+  printf("10 steps\r\n");
+
+  sleep(1000);
+  printf("20 steps\r\n");
+
+  sleep(1000);
+  printf("30 steps\r\n");
+
+  total_crossed++;
+
+  printf("%s farmer %d has crossed\r\n", 
+    (farmer->direction == NORTH ? "North" : "South"), 
+    farmer->id);
 
   semaphore_signal(&semaphore);
+
+  printf("Total Crossed: %d\r\n", total_crossed);
 }

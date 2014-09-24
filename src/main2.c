@@ -4,9 +4,7 @@
 #include "farmer.h"
 #include "thread.h"
 #include "semaphore_nostarve.h"
-#include "node.h"
-#include "linkedlist.h"
-#include "queue.h"
+#include "time.h"
 
 #if defined(_WIN32)
   #define clear_screen() (system("cls"))
@@ -52,7 +50,7 @@ int main (int argc, char *argv[]) {
       threads[i] = thread_create(cross_bridge, farmer);
     }
 
-    while (1 < 2);
+    while (1);
   }
 
   sem_ns_destroy(&semaphore);
@@ -61,21 +59,21 @@ int main (int argc, char *argv[]) {
 
 static void cross_bridge(farmer_t *farmer) {
   //loop forever
-  while (1 < 2) {
+  while (1) {
 
-    sem_ns_wait(&semaphore, &farmer->id);
+    sem_ns_wait(&semaphore, farmer->id);
 
     printf("%s farmer %d now crossing\r\n", 
       (farmer->direction == NORTH ? "North" : "South"), 
       farmer->id);
 
-    sleep(1);
+    sleep(1000);
     printf("10 steps\r\n");
 
-    sleep(1);
+    sleep(1000);
     printf("20 steps\r\n");
 
-    sleep(1);
+    sleep(1000);
     printf("30 steps\r\n");
 
     total_crossed++;

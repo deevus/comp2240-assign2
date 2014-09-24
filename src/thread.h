@@ -3,17 +3,17 @@
 
 #if defined(_WIN32)
   #include <Windows.h>
-	typedef PDWORD thread_id;
+	typedef LPDWORD thread_id;
 	typedef HANDLE thread_type;
-	#define os_create_thread(t, fn, arg, id) (t = CreateThread(NULL, 0, fn, arg, 0, id))
+	#define os_create_thread(t, fn, arg, id) \
+		(t = CreateThread(NULL, (SIZE_T)0, (LPTHREAD_START_ROUTINE)fn, (LPVOID)arg, (DWORD)0, (LPDWORD)id))
 	#define os_delete_thread(t) (CloseHandle(t->handle))
-
-	extern void sleep(int seconds);
 #else 
 	#include <pthread.h>
 	typedef pthread_t thread_type;
   typedef long thread_id;
-	#define os_create_thread(t, fn, arg, id) pthread_create(&t, NULL, fn, arg); 
+	#define os_create_thread(t, fn, arg, id) \
+		(pthread_create(&t, NULL, fn, arg))
   #define os_delete_thread(t) (pthread_exit(NULL))
 #endif
 

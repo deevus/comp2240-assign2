@@ -1,4 +1,5 @@
 #include "thread.h"
+#include <time.h>
 
 thread_t thread_create(void *start_routine, void *args) {
 	thread_t t;
@@ -11,18 +12,3 @@ thread_t thread_create(void *start_routine, void *args) {
 void thread_destroy(thread_t *thread) {
 	os_delete_thread(thread);
 }
-
-#if defined(_WIN32) 
-	void sleep(int sec) {
-	    HANDLE timer; 
-	    LARGE_INTEGER ft; 
-
-	    ft.QuadPart = -(10000000*sec); // convert to sec
-
-	    timer = CreateWaitableTimer(NULL, TRUE, NULL); 
-	    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0); 
-	    WaitForSingleObject(timer, INFINITE); 
-	    CloseHandle(timer); 
-	}
-#endif
-
