@@ -1,16 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthread.h>
 #include "semaphore.h"
-#include "thread.h"
 #include "farmer.h"
 #include "time.h"
 
-#if defined(_WIN32)
-  #define clear_screen() (system("cls"))
-#else
-  #define clear_screen() (system("clear"))
-#endif
+#define clear_screen() (system("clear"))
 
 static semaphore_t semaphore;
 static int total_crossed = 0;
@@ -31,7 +27,7 @@ int main (int argc, char *argv[]) {
     int num_threads = north + south;
     int north_id, south_id;
     north_id = south_id = 0;
-    thread_t threads[num_threads];
+    pthread_t threads[num_threads];
 
     for (int i = 0; i < num_threads; ++i) {
 
@@ -47,15 +43,18 @@ int main (int argc, char *argv[]) {
         south--;
       }
 
-      threads[i] = thread_create(cross_bridge, farmer);
+      pthread_create(&threads[i], NULL, (void *)&cross_bridge, farmer);
 
     } 
 
-    while(1);
+    for (int i = 0; i < num_threads; ++i)
+    {
+      pthread_join(threads[i], NULL);
+    }
 
   }
 
-  thread_destroy(NULL);
+  pthread_exit(NULL);
 }
 
 static void cross_bridge(farmer_t *farmer) {

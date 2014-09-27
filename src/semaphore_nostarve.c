@@ -2,6 +2,7 @@
 #include "atomic.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "time.h"
 
 static volatile int wait_id = 0;
 

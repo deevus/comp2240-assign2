@@ -1,5 +1,6 @@
 #include "semaphore.h"
 #include "atomic.h"
+#include "time.h"
 
 extern void semaphore_init(semaphore_t *sem) {
 	sem->lock = 0;
