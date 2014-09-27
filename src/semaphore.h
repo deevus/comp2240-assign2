@@ -6,7 +6,7 @@ struct semaphore {
 	volatile int lock;
 };
 
-extern void semaphore_init(semaphore_t *sem);
+extern void semaphore_init(semaphore_t *sem, signed int count);
 
 extern void semaphore_wait(semaphore_t *sem);
 

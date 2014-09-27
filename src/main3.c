@@ -24,7 +24,7 @@ int main (int argc, char *argv[]) {
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
-    sem_ns_init(&semaphore);
+    sem_ns_init(&semaphore, 1);
     int num_threads = north + south;
     int north_id, south_id;
     north_id = south_id = 0;

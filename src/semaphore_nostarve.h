@@ -11,7 +11,7 @@ struct semaphore {
 	queue_t blocked;
 };
 
-extern void sem_ns_init(semaphore_t *sem);
+extern void sem_ns_init(semaphore_t *sem, signed int count);
 
 extern int sem_ns_wait(semaphore_t *sem);
 

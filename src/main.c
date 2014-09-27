@@ -23,7 +23,7 @@ int main (int argc, char *argv[]) {
     int north = atoi(argv[argc - 2]);
 
     //init
-    semaphore_init(&semaphore);
+    semaphore_init(&semaphore, 1);
     int num_threads = north + south;
     int north_id, south_id;
     north_id = south_id = 0;
