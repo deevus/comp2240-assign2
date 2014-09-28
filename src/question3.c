@@ -1,64 +1,21 @@
+#include "question3.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-#include "farmer.h"
-#include "semaphore_nostarve.h"
 #include "time.h"
-
-#define clear_screen() (system("clear"))
+#include "common.h"
 
 static semaphore_t semaphore;
 static int total_crossed = 0;
 
-static void cross_bridge(farmer_t *farmer);
+void run(int north_farmers, int south_farmers) {
 
-int main (int argc, char *argv[]) {
-  if (argc != 3) {
-    printf("Usage: [#North Farmers] [#South Farmers]\r\n");
-  }
-  else {
-    /* normal execution */
-    printf("main: Start\r\n");
-
-    int south = atoi(argv[argc - 1]);
-    int north = atoi(argv[argc - 2]);
-
-    sem_ns_init(&semaphore, 1);
-    int num_threads = north + south;
-    int north_id, south_id;
-    north_id = south_id = 0;
-    pthread_t threads[num_threads];
-    for (int i = 0; i < num_threads; ++i)
-    {
-      farmer_t *farmer = malloc(sizeof(farmer_t));
-      if (north > 0) {
-        farmer->id = ++north_id;
-        farmer->direction = NORTH;
-        north--;
-      }
-      else {
-        farmer->id = ++south_id;
-        farmer->direction = SOUTH;
-        south--;
-      }
-
-      pthread_create(&threads[i], NULL, (void *)&cross_bridge, farmer);
-
-    } 
-
-    for (int i = 0; i < num_threads; ++i)
-    {
-      pthread_join(threads[i], NULL);
-    }
-
-  }
-
+  sem_ns_init(&semaphore, 1);
+  common_init(north_farmers, south_farmers, &cross_bridge);
   sem_ns_destroy(&semaphore);
-  pthread_exit(NULL);
+
 }
 
-static void cross_bridge(farmer_t *farmer) {
+void cross_bridge(farmer_t *farmer) {
   //loop forever
   while (1) {
 
