@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #if Q1 
 #include "question1.h"
@@ -22,7 +23,15 @@ int main (int argc, char *argv[]) {
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
 
+    //setup interrupt signal
+    signal(SIGINT, clean_up);
+
+    //run the program
+    //this will block until threads have finished
     run(north, south);
+
+    //exit when done
+    exit(EXIT_SUCCESS);
   }
 
 }

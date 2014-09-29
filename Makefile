@@ -1,7 +1,7 @@
 BUILD_DIR := bin
 SOURCE_DIR := src
 TEST_DIR := tests
-CFLAGS += -std=gnu99 -g -DDEBUG -Wall
+CFLAGS += -std=gnu99 -g -DDEBUG -Wall -pthread
 ALL_SOURCES := $(wildcard ${SOURCE_DIR}/*.c)
 EXCLUDE := src/main2.c src/main3.c src/main4.c
 ALL_SOURCES := $(filter-out ${EXCLUDE},${ALL_SOURCES})
@@ -24,8 +24,6 @@ TEST_OBJ := ${TEST_SRC:%.c=%.o}
 TEST_LIB := $(filter-out src/question% src/main%, ${ALL_SOURCES})
 TEST_INC := $(SOURCE_DIR)
 TEST_EXE := ${TEST_SRC:%.c=%} ${TEST_SRC:%.c=%.exe} ${TEST_SRC:%.c=%.dSYM}
-
-CFLAGS += -pthread
 
 .PHONY: all clean distclean test
 
