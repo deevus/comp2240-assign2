@@ -50,11 +50,12 @@ void cross_bridge(farmer_t *farmer) {
       farmer->id);
 
     sem_ns_signal(&north_south_bridge);
+    monitor_signal(&north_south_bridge_clear);
 
     printf("Total Crossed: %d\r\n", total_crossed_north_south);
 
+    monitor_wait(&lock, &north_south_bridge_clear);
     sem_ns_wait(&north_south_bridge);
-    monitor_signal(&north_south_bridge_clear);
 
     printf("%s farmer %d now returning\r\n", 
       (farmer->direction == NORTH ? "North" : "South"), 
@@ -76,6 +77,7 @@ void cross_bridge(farmer_t *farmer) {
       farmer->id);
 
     sem_ns_signal(&north_south_bridge);
+    monitor_signal(&north_south_bridge_clear);
 
     printf("Total Crossed: %d\r\n", total_crossed_north_south);
   }

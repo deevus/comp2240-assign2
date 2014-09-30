@@ -6,7 +6,7 @@
 
 typedef struct Condition condition_t;
 struct Condition {
-  int queued;
+  volatile int queued;
   mutex_t queue_lock;
   semaphore_t sem;
 };

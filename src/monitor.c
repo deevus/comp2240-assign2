@@ -1,4 +1,6 @@
 #include "monitor.h"
+#include "atomic.h"
+#include <stdio.h>
 
 void condition_init(condition_t *cond) {
   cond->queued = 0;
@@ -7,12 +9,9 @@ void condition_init(condition_t *cond) {
 }
 
 void monitor_wait(mutex_t *mutex, condition_t *cond) {
-  mutex_acquire(&cond->queue_lock);
+  mutex_release(mutex);
 
-  cond->queued++;
-
-  mutex_release(&cond->queue_lock);
-
+  atomic_inc(&cond->queued);
   sem_ns_wait(&cond->sem);
 
   mutex_acquire(mutex);
