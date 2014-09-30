@@ -3,14 +3,13 @@
 void condition_init(condition_t *cond) {
   cond->queued = 0;
   mutex_init(&cond->queue_lock);
-  sem_ns_init(&cond->sem, 0);
+  sem_ns_init(&cond->sem, 1);
 }
 
 void monitor_wait(mutex_t *mutex, condition_t *cond) {
   mutex_acquire(&cond->queue_lock);
 
   cond->queued++;
-  mutex_release(mutex);
 
   mutex_release(&cond->queue_lock);
 

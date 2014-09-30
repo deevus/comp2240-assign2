@@ -30,19 +30,19 @@ TEST_EXE := ${TEST_SRC:%.c=%} ${TEST_SRC:%.c=%.exe} ${TEST_SRC:%.c=%.dSYM}
 all: $(Q1_NAME) $(Q2_NAME) $(Q3_NAME) $(Q4_NAME)
 
 $(Q1_NAME): CFLAGS += -DQ1
-$(Q1_NAME): clean $(Q1_OBJ)
+$(Q1_NAME): $(Q1_OBJ)
 	$(LINK.c) $(Q1_OBJ) -o $(Q1_NAME)
 
 $(Q2_NAME): CFLAGS += -DQ2
-$(Q2_NAME): clean $(Q2_OBJ)
+$(Q2_NAME): $(Q2_OBJ)
 	$(LINK.c) $(Q2_OBJ) -o $(Q2_NAME)
 
 $(Q3_NAME): CFLAGS += -DQ3
-$(Q3_NAME): clean $(Q3_OBJ)
+$(Q3_NAME): $(Q3_OBJ)
 	$(LINK.c) $(Q3_OBJ) -o $(Q3_NAME)
 
 $(Q4_NAME): CFLAGS += -DQ4
-$(Q4_NAME): clean $(Q4_OBJ)
+$(Q4_NAME): $(Q4_OBJ)
 	$(LINK.c) $(Q4_OBJ) -o $(Q4_NAME)
 
 clean:
