@@ -14,6 +14,9 @@ void sem_ns_init(semaphore_t *sem, signed int count) {
 	sem->critlock = count;
 	sem->queuelock = 0;
 	sem->next_id = 0;
+
+	pthread_mutex_init(&sem->lock, NULL);
+	pthread_cond_init(&sem->cond, NULL);
 }
 
 void sem_ns_destroy(semaphore_t *sem) {
@@ -32,7 +35,7 @@ int sem_ns_wait(semaphore_t *sem) {
 		sem_queue(sem, id);
 
 		//wait until turn
-		while (atomic_compare_swap(&sem->next_id, *id, *id) != *id);
+		while (pthread_cond_wait(&sem->cond, &sem->lock) && sem->next_id != *id);
 	}
 	
 	//run now
@@ -65,6 +68,7 @@ static void sem_dequeue(semaphore_t *sem) {
 
 		//set next id
 		sem->next_id = *id;
+		pthread_cond_signal(&sem->cond);
 
 		//dequeue it
 		queue_dequeue(&sem->blocked);
