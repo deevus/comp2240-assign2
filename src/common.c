@@ -9,44 +9,58 @@ static pthread_t *thread_ptr;
 static farmer_t **farmer_ptr;
 
 void common_init(int north_farmers, int south_farmers, void *fn) {
+  //calc the number of threads to spawn
   num_threads = north_farmers + south_farmers;
+
+  //init id counters
   int north_id, south_id;
   north_id = south_id = 0;
 
+  //create thread array
   pthread_t threads[num_threads];
   thread_ptr = threads;
 
+  //create farmer array
   farmer_t *farmers[num_threads];
   farmer_ptr = farmers;
 
+  //spawn farmers and threads
   for (int i = 0; i < num_threads; ++i) {
 
+    //allocate memory for farmer
     farmers[i] = malloc(sizeof(farmer_t));
+
+    //spawn north then south farmers in that order
     if (north_farmers > 0) {
-      farmers[i]->id = ++north_id;
-      farmers[i]->direction = NORTH;
+      //spawn north farmer
+      farmer_init(farmers[i], ++north_id, NORTH, SOUTH);
       north_farmers--;
     }
     else {
-      farmers[i]->id = ++south_id;
-      farmers[i]->direction = SOUTH;
+      //spawn south farmer
+      farmer_init(farmers[i], ++south_id, SOUTH, NORTH);
       south_farmers--;
     }
 
+    //spawn the thread
     pthread_create(&threads[i], NULL, fn, farmers[i]);
 
   } 
 
+  //join threads into main thread to stop
+  //main thread from terminating
   for (int i = 0; i < num_threads; ++i)
   {
     pthread_join(threads[i], NULL);
   }
 
+  //exit when done
   pthread_exit(NULL); 
 }
 
 void common_clean_up() {
   printf("Cancelling threads and farmers...\r\n");
+  //free farmers and threads
   for (int i = 0; i < num_threads; ++i)
   {
     //cancel the thread

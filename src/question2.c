@@ -25,7 +25,7 @@ void cross_bridge(farmer_t *farmer) {
     sem_ns_wait(&semaphore);
 
     printf("%s farmer %d now crossing\r\n", 
-      (farmer->direction == NORTH ? "North" : "South"), 
+      (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
 
     msleep(1000);
@@ -40,7 +40,7 @@ void cross_bridge(farmer_t *farmer) {
     total_crossed++;
 
     printf("%s farmer %d has crossed\r\n", 
-      (farmer->direction == NORTH ? "North" : "South"), 
+      (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
 
     sem_ns_signal(&semaphore);
