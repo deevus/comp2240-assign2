@@ -23,7 +23,7 @@ extern void run(int north_farmers, int south_farmers);
 	Preconditions: Parameter farmer must not be NULL
 	Postconditions: None
 */
-extern void cross_bridge(farmer_t *farmer);
+extern void do_work(farmer_t *farmer);
 
 /*
 	Cleans up any memory

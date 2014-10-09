@@ -10,6 +10,7 @@ struct Farmer {
   location origin;
   location location;
   location destination;
+  location next_stop;
 };
 
 void farmer_init(farmer_t *farmer, int id, location origin, location destination);

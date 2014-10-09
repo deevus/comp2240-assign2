@@ -12,11 +12,11 @@ static int total_crossed = 0;
 void run(int north_farmers, int south_farmers) {
 
   semaphore_init(&semaphore, 1);
-  common_init(north_farmers, south_farmers, &cross_bridge);
+  common_init(north_farmers, south_farmers, &do_work);
 
 }
 
-void cross_bridge(farmer_t *farmer) {
+void do_work(farmer_t *farmer) {
   //allow thread to be cancelled in the case of clean up
   common_pthread_setcancel();
 
