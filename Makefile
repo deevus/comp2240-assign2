@@ -1,3 +1,4 @@
+CC=gcc
 BUILD_DIR := bin
 SOURCE_DIR := src
 TEST_DIR := tests

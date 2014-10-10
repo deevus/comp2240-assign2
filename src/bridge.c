@@ -82,6 +82,10 @@ void bridge_destroy(bridge_t *bridge) {
 	mutex_destroy(&bridge->lock);
 }
 
+int bridge_num_waiting(bridge_t *bridge) {
+	return queue_getsize(&bridge->lock.blocked);
+}
+
 bool farmer_can_cross(farmer_t *farmer, bridge_t *bridge) {
 	//is the farmer adjacent to this bridge
 	return farmer->location == bridge->island_1 || farmer->location == bridge->island_2;

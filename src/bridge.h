@@ -54,6 +54,14 @@ void bridge_cross(bridge_t *bridge, farmer_t *farmer);
 void bridge_destroy(bridge_t *bridge);
 
 /*
+	Returns number of farmers waiting to cross bridge
+
+	Preconditions: bridge is not null
+	Postconditions: none
+*/
+int bridge_num_waiting(bridge_t *bridge);
+
+/*
 	Returns boolean determining whether farmer can cross
 	given bridge. If the farmer is not in a location able
 	to cross it will return false, otherwise true.

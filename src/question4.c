@@ -70,8 +70,15 @@ void do_work(farmer_t *farmer) {
   	bridge_t *bridge = &north_south_bridge;
   	int *bridge_total = &total_crossed_north_south;
 
-  	if (!farmer_can_cross(farmer, bridge) || bridge_in_use(bridge)) {
-  		//farmer is already at west
+  	//north-south bridge valid but in use
+  	if (farmer_can_cross(farmer, &north_south_bridge) && bridge_in_use(&north_south_bridge)) {
+  		//then go west
+	  	bridge = farmer->location == NORTH ? &north_west_bridge : &south_west_bridge;
+  		bridge_total = farmer->location == NORTH ? &total_crossed_north_west : &total_crossed_south_west;	
+  	}
+  	//north-south not valid
+		//farmer is already at west
+  	else if (!farmer_can_cross(farmer, &north_south_bridge)) {
   		//so they can cross when ready
 	  	if (farmer->location == WEST) {
 	  		//need to cross the island
@@ -135,13 +142,18 @@ void do_work(farmer_t *farmer) {
 		  		bridge_total = farmer->origin == NORTH ? &total_crossed_north_west : &total_crossed_south_west;
 	  		}
 	  	}
-	  	//they are travelling to west island
-	  	else {
-		  	bridge = farmer->location == NORTH ? &north_west_bridge : &south_west_bridge;
-	  		bridge_total = farmer->location == NORTH ? &total_crossed_north_west : &total_crossed_south_west;
-	  	}
+
 
 	  }
+  	else {
+  		bridge_t *west_bridge = farmer->location == NORTH ? &north_west_bridge : &south_west_bridge; 
+	  	bridge = bridge_num_waiting(west_bridge) < bridge_num_waiting(&north_south_bridge) ? west_bridge : &north_south_bridge;
+  		bridge_total = bridge == &north_south_bridge 
+	  		? &total_crossed_north_south 
+	  		: bridge == &north_west_bridge 
+		  		? &total_crossed_north_west 
+		  		: &total_crossed_north_south;
+  	}
 
   	bridge_cross(bridge, farmer);
 
