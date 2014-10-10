@@ -14,14 +14,20 @@
 
 #define clear_screen() (system("clear"))
 
+static char *usage_str = "Usage: ./qN [#North Farmers] [#South Farmers]. Example: ./q4 6 4\r\n";
+
 int main (int argc, char *argv[]) {
   if (argc != 3) {
-    printf("Usage: [#North Farmers] [#South Farmers]\r\n");
+    printf(usage_str);
   }
   else {
     /* normal execution */
     int south = atoi(argv[argc - 1]);
     int north = atoi(argv[argc - 2]);
+
+    if (north + south == 0) {
+      printf(usage_str);
+    }
 
     //setup interrupt signal
     signal(SIGINT, clean_up);
