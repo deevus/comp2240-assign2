@@ -23,8 +23,8 @@ static mutex_t west_island;
 static condition_t waiting_north_condition;
 static condition_t waiting_south_condition;
 
-static bool waiting_north;
-static bool waiting_south;
+static volatile bool waiting_north;
+static volatile bool waiting_south;
 
 static int total_crossed_north_south;
 static int total_crossed_north_west;
@@ -85,7 +85,7 @@ void do_work(farmer_t *farmer) {
 
 	  		//determine what side of the island the farmer is on
 	  		location came_from = farmer->has_load ? farmer->origin : farmer->destination;
-	  		bool *b_waiting = came_from == NORTH ? &waiting_north : &waiting_south;
+	  		volatile bool *b_waiting = came_from == NORTH ? &waiting_north : &waiting_south;
 	  		condition_t *wait_c = came_from == NORTH ? &waiting_north_condition : &waiting_south_condition;
 
 	  		//announce arrival
