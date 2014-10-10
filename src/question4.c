@@ -74,8 +74,21 @@ void do_work(farmer_t *farmer) {
 	  		bool *b_waiting = came_from == NORTH ? &waiting_north : &waiting_south;
 	  		condition_t *wait_c = came_from == NORTH ? &waiting_north_condition : &waiting_south_condition;
 
+	  		//announce arrival
+	  		printf("%s farmer %d has arrived on the %s side of WEST island\r\n",
+	  			farmer->origin == NORTH ? "NORTH" : "SOUTH",
+	  			farmer->id,
+	  			came_from == NORTH ? "NORTH" : "SOUTH");	
+
 	  		//is someone waiting?
 	  		if (*b_waiting) {
+	  			//announce meeting another farmer
+	  			printf("%s farmer %d has met another farmer on the %s side of WEST island\r\n",
+		  			farmer->origin == NORTH ? "NORTH" : "SOUTH",
+		  			farmer->id,
+		  			came_from == NORTH ? "NORTH" : "SOUTH");	
+
+	  			//signal waiting farmer to go
 	  			monitor_signal(wait_c);
 	  		}
 	  		else {
@@ -85,7 +98,17 @@ void do_work(farmer_t *farmer) {
 		  		*b_waiting = true;
 		  		mutex_release(&west_island);
 
+		  		printf("%s farmer %d is waiting for another farmer on the %s side of WEST island\r\n",
+		  			farmer->origin == NORTH ? "NORTH" : "SOUTH",
+		  			farmer->id,
+		  			came_from == NORTH ? "NORTH" : "SOUTH");
 		  		monitor_wait(&west_island, wait_c);
+
+		  		//announce no longer waiting
+					printf("%s farmer %d can now cross from %s side of WEST island\r\n",
+		  			farmer->origin == NORTH ? "NORTH" : "SOUTH",
+		  			farmer->id,
+		  			came_from == NORTH ? "NORTH" : "SOUTH");	
 
 	  			//atomically unset b_waiting
 		  		mutex_acquire(&west_island);
