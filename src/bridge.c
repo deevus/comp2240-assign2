@@ -3,18 +3,22 @@
 #include <stdio.h>
 
 void bridge_init(bridge_t *bridge, location island_1, location island_2) {
+	//initialise the mutex
 	mutex_init(&bridge->lock);
 
+	//set vars
 	bridge->island_1 = island_1;
 	bridge->island_2 = island_2;
 }
 
 bool bridge_in_use(bridge_t *bridge) {
+	//in crit section?
 	return bridge->lock.critlock == 0;
 }
 
 static void farmer_cross(bridge_t *bridge, farmer_t *farmer) {
 
+	//get farmer's destination
 	location destination = farmer->location == bridge->island_1 ? bridge->island_2 : bridge->island_1;
 
 	//generate strings for printing
@@ -56,14 +60,18 @@ static void farmer_cross(bridge_t *bridge, farmer_t *farmer) {
 }
 
 void bridge_cross(bridge_t *bridge, farmer_t *farmer) {
+	//get lock
 	mutex_acquire(&bridge->lock);
 
+	//cross bridge
 	farmer_cross(bridge, farmer);
 
+	//release lock
 	mutex_release(&bridge->lock);
 }
 
 void bridge_destroy(bridge_t *bridge) {
+	//destroy mutex
 	mutex_destroy(&bridge->lock);
 }
 

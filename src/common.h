@@ -1,10 +1,29 @@
 #ifndef COMMON_H
 #define COMMON_H 
 
-extern void common_init(int north_farmers, int south_farmers, void *fn);
+/*
+	Initialises farmers and threads, then starts the threads
+	with the given function fn
 
-extern void common_clean_up();
+	Preconditions: fn is not null, north_farmers >= 0, south_farmers >= 0
+	Postconditions: farmers are created and threads are running
+*/
+void common_init(int north_farmers, int south_farmers, void *fn);
 
-extern void common_pthread_setcancel();
+/*
+	Cancels threads and cleans up memory allocation
+
+	Preconditions: none
+	Postconditions: threads have been cancelled
+*/
+void common_clean_up();
+
+/*
+	Flags the running thread to be cancellable by SIGINT
+
+	Preconditions: Call is made from running thread
+	Postconditions: thread can be interrupted at program end
+*/
+void common_pthread_setcancel();
 
 #endif

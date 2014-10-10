@@ -10,20 +10,68 @@ struct ll_struct {
   int size;
 };
 
-extern void linkedlist_init(linkedlist_t *ll);
+/*
+	Initialises linked list instance
 
-extern void linkedlist_insert(linkedlist_t *ll, const void *data);
+	Preconditions: ll is not null
+	Postconditions: linked list is initialised to default values
+*/
+void linkedlist_init(linkedlist_t *ll);
 
-extern void linkedlist_remove(linkedlist_t *ll, const void *data);
+/*
+	Insert the given data into the linked list
 
-extern const void *linkedlist_gethead(const linkedlist_t *ll);
+	Preconditions: ll is not null
+	Postconditions: data is inserted into the end of the list
+*/
+void linkedlist_insert(linkedlist_t *ll, const void *data);
 
-extern const void *linkedlist_gettail(const linkedlist_t *ll);
+/*
+	Removed the given data item from the linked list
 
-extern bool linkedlist_isempty(const linkedlist_t *ll);
+	Preconditions: ll and data is not null
+	Postconditions: data is removed from the list
+*/
+void linkedlist_remove(linkedlist_t *ll, const void *data);
 
-extern const int linkedlist_getsize(const linkedlist_t *ll);
+/*
+	Returns the head of the list
 
-extern void linkedlist_destroy(linkedlist_t *ll);
+	Preconditions: none
+	Postconditions: none
+*/
+const void *linkedlist_gethead(const linkedlist_t *ll);
+
+/*
+	Returns the tail of the list
+
+	Preconditions: none
+	Postconditions: none
+*/
+const void *linkedlist_gettail(const linkedlist_t *ll);
+
+/*
+	Determines whether the linked list is empty
+
+	Preconditions: ll is not null
+	Postconditions: none
+*/
+bool linkedlist_isempty(const linkedlist_t *ll);
+
+/*
+	Returns the size of the list
+
+	Preconditions: ll is not null
+	Postconditions: none
+*/
+const int linkedlist_getsize(const linkedlist_t *ll);
+
+/*
+	Cleans up any memory allocation for the list
+
+	Preconditions: ll is not null
+	Postconditions: ll is no longer initialised
+*/
+void linkedlist_destroy(linkedlist_t *ll);
 
 #endif /* LINKEDLIST_H */

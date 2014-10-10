@@ -59,15 +59,12 @@ void common_init(int north_farmers, int south_farmers, void *fn) {
 }
 
 void common_clean_up() {
-  printf("Cancelling threads and farmers...\r\n");
   //free farmers and threads
+  printf("Cancelling threads...\r\n");
   for (int i = 0; i < num_threads; ++i)
   {
     //cancel the thread
     pthread_cancel(*(thread_ptr + i));
-
-    //then free the associated farmer
-    free((farmer_ptr + i));
   }
 }
 
