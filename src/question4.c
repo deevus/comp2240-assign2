@@ -146,8 +146,13 @@ void do_work(farmer_t *farmer) {
 
 	  }
   	else {
+  		//which bridge to cross?
   		bridge_t *west_bridge = farmer->location == NORTH ? &north_west_bridge : &south_west_bridge; 
+
+  		//compare queues of adjacent bridges
 	  	bridge = bridge_num_waiting(west_bridge) < bridge_num_waiting(&north_south_bridge) ? west_bridge : &north_south_bridge;
+
+	  	//get pointer to bridge total
   		bridge_total = bridge == &north_south_bridge 
 	  		? &total_crossed_north_south 
 	  		: bridge == &north_west_bridge 
