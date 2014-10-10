@@ -1,3 +1,10 @@
+/**
+  Simon Hartcher
+  C3185790
+
+  COMP2240 Assignment 2
+**/
+
 #include "question3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,8 +29,10 @@ void do_work(farmer_t *farmer) {
   //loop forever
   while (1) {
 
+    //wait turn
     sem_ns_wait(&semaphore);
 
+    //announce crossing
     printf("%s farmer %d now crossing\r\n", 
       (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
@@ -37,18 +46,24 @@ void do_work(farmer_t *farmer) {
     msleep(1000);
     printf("30 steps\r\n");
 
+    //update total
     total_crossed++;
 
+    //announce crossed
     printf("%s farmer %d has crossed\r\n", 
       (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
 
+    //signal next farmer
     sem_ns_signal(&semaphore);
 
+    //neon sign
     printf("Total Crossed: %d\r\n", total_crossed);
 
+    //wait to return
     sem_ns_wait(&semaphore);
 
+    //announce returning
     printf("%s farmer %d now returning\r\n", 
       (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
@@ -62,14 +77,18 @@ void do_work(farmer_t *farmer) {
     msleep(500);
     printf("15 steps\r\n");
 
+    //update total
     total_crossed++;
 
+    //announce return
     printf("%s farmer %d has returned\r\n", 
       (farmer->destination == NORTH ? "North" : "South"), 
       farmer->id);
 
+    //signal next farmer
     sem_ns_signal(&semaphore);
 
+    //neon sign
     printf("Total Crossed: %d\r\n", total_crossed);
   }
 }

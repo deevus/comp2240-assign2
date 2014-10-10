@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
 #include "bridge.h"
 #include "time.h"
 #include <stdio.h>
@@ -22,9 +29,9 @@ static void farmer_cross(bridge_t *bridge, farmer_t *farmer) {
 	location destination = farmer->location == bridge->island_1 ? bridge->island_2 : bridge->island_1;
 
 	//generate strings for printing
-	char *origin_str = farmer->origin == NORTH ? "NORTH" : "SOUTH";
-	char *next_str = destination == NORTH ? "NORTH Island" : destination == SOUTH ? "SOUTH Island" : "WEST Island";
-	char *location_str = farmer->location == NORTH ? "NORTH Island" : farmer->location == SOUTH ? "SOUTH Island" : "WEST Island";
+	char *origin_str = farmer->origin == NORTH ? NORTH_STR : SOUTH_STR;
+	char *next_str = destination == NORTH ? NORTH_STR " Island" : destination == SOUTH ? SOUTH_STR " Island" : WEST_STR " Island";
+	char *location_str = farmer->location == NORTH ? NORTH_STR " Island" : farmer->location == SOUTH ? SOUTH_STR " Island" : WEST_STR " Island";
 
 	//print crossing information
 	printf("%s farmer %d now %s from %s to %s\r\n", origin_str, farmer->id, (farmer->has_load ? "crossing" : "returning"), location_str, next_str);

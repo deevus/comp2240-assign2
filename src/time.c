@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>

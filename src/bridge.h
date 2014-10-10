@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
 #ifndef BRIDGE_H
 #define BRIDGE_H 
 #include "mutex.h"

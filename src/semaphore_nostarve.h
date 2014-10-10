@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
 #ifndef SEMAPHORE_NOSTARVE_H
 #define SEMAPHORE_NOSTARVE_H
 
@@ -15,12 +22,36 @@ struct semaphore {
 	pthread_cond_t cond;
 };
 
-extern void sem_ns_init(semaphore_t *sem, signed int count);
+/*
+	Initialise semaphore
 
-extern int sem_ns_wait(semaphore_t *sem);
+	Preconditions: sem is not null
+	Postconditions: semaphore is initialised to given count
+*/
+void sem_ns_init(semaphore_t *sem, signed int count);
 
-extern int sem_ns_signal(semaphore_t *sem);
+/*
+	Wait on given semaphore
 
-extern void sem_ns_destroy(semaphore_t *sem);
+	Preconditions: sem is not null
+	Postconditions: none
+*/
+int sem_ns_wait(semaphore_t *sem);
+
+/*
+	Signal given semaphore
+
+	Preconditions: sem is not null
+	Postconditions: next thread will run
+*/
+int sem_ns_signal(semaphore_t *sem);
+
+/*
+	Clean up semaphore memory allocation
+
+	Preconditions: sem is not null
+	Postconditions: sem is no longer initialised
+*/
+void sem_ns_destroy(semaphore_t *sem);
 
 #endif

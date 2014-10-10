@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
 #include "question4.h"
 #include <stdio.h>
 #include <pthread.h>
@@ -150,4 +157,6 @@ void clean_up() {
   bridge_destroy(&north_south_bridge);
   bridge_destroy(&north_west_bridge);
   bridge_destroy(&south_west_bridge);
+
+  exit(EXIT_SUCCESS);
 }

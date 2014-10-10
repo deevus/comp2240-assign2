@@ -1,3 +1,10 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+	
 #ifndef FARMER_H
 #define FARMER_H
 #include <stdbool.h>
@@ -12,6 +19,10 @@ struct Farmer {
   location destination;
   location next_stop;
 };
+
+#define NORTH_STR "NORTH"
+#define SOUTH_STR "SOUTH"
+#define WEST_STR "WEST"
 
 /*
 	Initialises the given farmer instance

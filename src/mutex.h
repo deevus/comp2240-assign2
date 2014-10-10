@@ -1,3 +1,14 @@
+/**
+	Simon Hartcher
+	C3185790
+
+	COMP2240 Assignment 2
+**/
+
+/*
+	Mutex object is a simple wrapper of semaphore_t 
+	with a count of 1
+*/
 #ifndef MUTEX_H
 #define MUTEX_H 
 

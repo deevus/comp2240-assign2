@@ -1,3 +1,10 @@
+/**
+  Simon Hartcher
+  C3185790
+
+  COMP2240 Assignment 2
+**/
+
 #include "linkedlist.h"
 #include <stdlib.h>
 
