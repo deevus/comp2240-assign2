@@ -157,6 +157,4 @@ void clean_up() {
   bridge_destroy(&north_south_bridge);
   bridge_destroy(&north_west_bridge);
   bridge_destroy(&south_west_bridge);
-
-  exit(EXIT_SUCCESS);
 }
